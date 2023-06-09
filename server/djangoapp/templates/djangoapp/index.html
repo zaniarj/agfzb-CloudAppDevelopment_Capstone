@@ -15,13 +15,51 @@
 
     <body>
     
-    <!--Add a nav bar here -->
-    <nav class="navbar navbar-light bg-light">
-        <a href = "/home">Home</a>
-        <a href = "/djangoapp/contact">Contact Us </a>
-        <a href = "/djangoapp/about">About Us</a>
-        <a href = "/login">Login</a>
+    <!-- a nav bar here -->
+    {% if messages %}
+        {% for message in messages %}
+         {% if message.tags %}  <script>alert("{{ message }}")</script> {% endif %}
 
+        {% endfor %}
+
+    {% endif %}
+
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="nav navbar-nav navbar-left">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Menu
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href ="/home">Home</a>
+                        <a class="dropdown-item" href ="/djangoapp/contact">Contact Us </a>
+                        <a class="dropdown-item" href ="/djangoapp/about">About Us</a>
+                        <a class="dropdown-item" href ="/login">Login</a>
+                    </div>
+                  </div>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                <li>
+                    <a class="btn btn-link" href="#">{{ user.first_name }}({{ user.username }})</a>
+                    <a class="btn btn-link" href="{% url 'djangoapp:logout' %}">Logout</a>
+                </li>
+                {% else %}
+                <li>
+                    <form class="form-inline" action="{% url 'djangoapp:login' %}" method="post">
+                        {% csrf_token %}
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Username" name="username" >
+                            <input type="password" class="form-control" placeholder="Password" name="psw" >
+                            <button class="btn btn-primary" type="submit">Login</button>
+                            <a class="btn btn-link" href="">Sign Up</a>
+                        </div>
+                    </form>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
     </nav>
 
     <!--Add a dealer table here -->
