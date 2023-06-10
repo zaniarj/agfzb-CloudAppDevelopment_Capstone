@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect,reverse
 # from .models import related models
 # from .restapis import related methods
 from django.contrib.auth import login, logout, authenticate
@@ -53,7 +53,7 @@ def logout_request(request):
 
 # Functions for `registration_request` view to handle sign up request
 def registration_request(request):
-   context = {}
+    context = {}
     if request.method == 'GET':
         return render(request, 'djangoapp/registration.html', context)
     elif request.method == 'POST':
@@ -76,12 +76,10 @@ def registration_request(request):
                                             password=password)
             # Login the user and redirect to course list page
             login(request, user)
-            return redirect("djangoapp:get_dealerships")
+            return redirect(reverse("djangoapp:index"))
         else:
-            context={"msq":"Username already exists!"}
-            return render(request, 'djangoapp/registration.html', context)
-
-
+            context={"msg":"Username already exists!"}
+            return render(request, 'djangoapp/registration.html', context)  
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     context = {}
