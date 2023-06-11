@@ -1,12 +1,9 @@
 import requests
 import json
-from .models import CarDealer
+from .models import CarDealer, Review
 from requests.auth import HTTPBasicAuth
 
 
-# Create a `get_request` to make HTTP GET requests
-# e.g., response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
-#                                     auth=HTTPBasicAuth('apikey', api_key))
 def get_request(url, **kwargs):
     print(kwargs)
     print("GET from {} ".format(url))
@@ -27,16 +24,7 @@ def get_request(url, **kwargs):
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 
 
-# Create a get_dealers_from_cf method to get dealers from a cloud function
-# def get_dealers_from_cf(url, **kwargs):
-# - Call get_request() with specified arguments
-# - Parse JSON results into a CarDealer object list
 
-
-# Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
-# def get_dealer_by_id_from_cf(url, dealerId):
-# - Call get_request() with specified arguments
-# - Parse JSON results into a DealerView object list
 def get_dealers_from_cf(url, **kwargs):
     results = []
     # Call get_request with a URL parameter
@@ -55,6 +43,23 @@ def get_dealers_from_cf(url, **kwargs):
                                    st=dealer_doc["st"], zip=dealer_doc["zip"])
             results.append(dealer_obj)
     return results
+
+# Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
+def get_dealer_by_id_from_cf(url, dealerId):
+    result = []
+    json_result = get_request(url,{"dealerId":dealerId})
+
+    if json_result:
+        review = json_result['review']
+        for rev in review:
+            review_obj = Review(car_make = rev['car_make'],car_model = rev['car_model'],
+                        car_year = rev['car_year'],dealership = rev['dealership'],
+                        name = rev['name'],purchase_date = rev['purchase_date'],review = rev['review'])
+        result.append(review_obj)
+    
+    return result
+
+
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 # def analyze_review_sentiments(text):
