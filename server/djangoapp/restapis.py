@@ -84,7 +84,7 @@ def get_dealers_by_state(url, state):
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 def analyze_review_sentiments(**kwargs):
     params = dict()
-    api_key = "2qDzVvpxG_Yhy33Sl9I6uBHedhtjlEJk0C3KI9ikydfP"
+    api_key = "2qDzVvpxG_Yhy33Sl9I6uBHedhtjlEJk0C3KI9ikydfP1"
     url = "https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/6832cd69-0f27-4e35-b5d3-b66990453d6d"
     params["text"] = kwargs["text"]
     params["version"] = kwargs["version"]
