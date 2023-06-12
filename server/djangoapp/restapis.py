@@ -45,17 +45,19 @@ def get_dealers_from_cf(url, **kwargs):
     return results
 
 # Create a get_dealer_reviews_from_cf method to get reviews by dealer id from a cloud function
-def get_dealer_by_id(url, dealerId):
+def get_dealer_reviews_from_cf(url, dealerId):
     result = []
-    json_result = get_request(url,{"dealerId":dealerId})
+    payload = {"dealerId":dealerId}
+    url = url + f"?dealerId={dealerId}"
+    json_result = get_request(url)
 
     if json_result:
-        review = json_result['review']
+        review = json_result["review"]
         for rev in review:
             review_obj = DealerReview(car_make = rev['car_make'],car_model = rev['car_model'],
                         car_year = rev['car_year'],dealership = rev['dealership'],
                         name = rev['name'],purchase_date = rev['purchase_date'],review = rev['review']
-                        ,id = rev['id'],purchase = rev['purchase'])
+                        ,purchase = rev['purchase'],id = rev['id'])
             result.append(review_obj)
     
     return result
@@ -64,7 +66,7 @@ def get_dealer_by_id(url, dealerId):
 def get_dealers_by_state(url, state):
     result = []
     json_result = get_request(url,{"state":state})
-
+    
     if json_result:
         for dealer_doc in json_result:
             dealer_obj = CarDealer(address=dealer_doc["address"], city=dealer_doc["city"], full_name=dealer_doc["full_name"],

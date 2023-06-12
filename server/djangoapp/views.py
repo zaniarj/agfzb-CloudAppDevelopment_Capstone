@@ -80,7 +80,7 @@ def registration_request(request):
         else:
             context={"msg":"Username already exists!"}
             return render(request, 'djangoapp/registration.html', context)  
-            
+
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
     context = {}
@@ -95,8 +95,13 @@ def get_dealerships(request):
 
 
 # Functions for `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
+def get_dealer_details(request, dealer_id):
+    context = {}
+    if request.method == "GET":
+        
+        url = "https://us-south.functions.appdomain.cloud/api/v1/web/5f9594c6-e4a6-4467-91d6-9f87f14d2c0d/dealership-package/review"
+        reviews = get_dealer_reviews_from_cf(url,str(dealer_id))
+        return HttpResponse(reviews)
 
 # Functions for `add_review` view to submit a review
 # def add_review(request, dealer_id):

@@ -60,7 +60,7 @@ class CarDealer:
 
 class DealerReview:
 
-    def __init__(self,car_make,car_model,car_year,dealership,name,purchase_date,review,purchace,id,sentiment=None):
+    def __init__(self,car_make,car_model,car_year,dealership,name,purchase_date,review,purchase,id,sentiment=None):
         self.car_make       = car_make
         self.car_model      = car_model
         self.car_year       = car_year
