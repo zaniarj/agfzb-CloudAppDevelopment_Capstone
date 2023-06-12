@@ -5,19 +5,22 @@ from requests.auth import HTTPBasicAuth
 
 
 def get_request(url, **kwargs):
-    print(kwargs)
     print("GET from {} ".format(url))
+    json_data={}
     try:
-        # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
-                                    params=kwargs)
+        if "apikey" in kwargs:
+            response = requests.get(url, headers={'Content-Type':'application/json'}, params=kwargs, auth=HTTPBasicAuth("apikey", kwargs["apikey"]))
+        else:
+            response = requests.get(url, headers={'Content-Type':'application/json'}, params=kwargs)
+
         status_code = response.status_code
         print("With status {} ".format(status_code))
         json_data = json.loads(response.text)
-        return json_data
-    except:
-        # If any error occurs
-        print("Network exception occurred")
+        #print(json_data)
+    except Exception as e:
+        print("Error " ,e)
+    
+    return json_data
     
 
 # Create a `post_request` to make HTTP POST requests
@@ -57,7 +60,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
             review_obj = DealerReview(car_make = rev['car_make'],car_model = rev['car_model'],
                         car_year = rev['car_year'],dealership = rev['dealership'],
                         name = rev['name'],purchase_date = rev['purchase_date'],review = rev['review']
-                        ,purchase = rev['purchase'],id = rev['id'])
+                        ,purchase = rev['purchase'],id = rev['id'],sentiment = analyze_review_sentiments(rev['review']))
             result.append(review_obj)
     
     return result
@@ -79,9 +82,17 @@ def get_dealers_by_state(url, state):
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-# def analyze_review_sentiments(text):
-# - Call get_request() with specified arguments
-# - Get the returned sentiment label such as Positive or Negative
+def analyze_review_sentiments(**kwargs):
+    params = dict()
+    api_key = "2qDzVvpxG_Yhy33Sl9I6uBHedhtjlEJk0C3KI9ikydfP"
+    url = "https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/6832cd69-0f27-4e35-b5d3-b66990453d6d"
+    params["text"] = kwargs["text"]
+    params["version"] = kwargs["version"]
+    params["features"] = kwargs["features"]
+    params["return_analyzed_text"] = kwargs["return_analyzed_text"]
+    response = requests.get(url, params=params, headers={'Content-Type': 'application/json'},
+                                    auth=HTTPBasicAuth('apikey', api_key))
+    
 
 
 
