@@ -104,6 +104,25 @@ def get_dealer_details(request, dealer_id):
         return HttpResponse(reviews)
 
 # Functions for `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
+def add_review(request, dealer_id):
+    context = {}
+    if request.method == "GET":
+        pass
+    
+    if request.method == "POST":
+        url = "https://us-south.functions.cloud.ibm.com/api/v1/namespaces/5f9594c6-e4a6-4467-91d6-9f87f14d2c0d/actions/dealership-package/post-review" 
+        if request.user.is_authenticated:
+            review = {}
+            json_payload = {}
+            review["time"] = datetime.utcnow().isoformat()
+            review["name"]=request.POST["name"]
+            review["dealership"]=dealer_id
+            review["review"]=request.POST["content"]
+            json_payload["review"] = review
+            json_result = post_request(url, json_payload, dealerId=dealer_id)
+            print(json_result)
+
+
+    return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+
 
