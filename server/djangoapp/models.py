@@ -17,13 +17,11 @@ class CarModel(models.Model):
 
     types = [("SE","Sedan"),("SU", "SUV"),("WA", "WAGON"),("CR", "Cross Over"),("TR", "Truck")]
 
-
-    car_make  = models.ForeignKey(CarMake, on_delete=models.CASCADE)
-    name      = models.CharField(max_length=100)
-    dealer_id = models.IntegerField()
-    car_type  = models.CharField(max_length=2, choices= types)
-    Year      = models.DateField()
-    color     = models.CharField(max_length=20)
+    make        = models.ForeignKey(CarMake, on_delete=models.CASCADE)
+    name        = models.CharField(null=False, max_length=30)
+    car_type    = models.CharField(max_length=2, choices= types)
+    dealer_id   = models.IntegerField()
+    year        = models.DateField()
 
     def __str__(self):
         return self.make
